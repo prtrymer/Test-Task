@@ -48,9 +48,16 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
       onRenamed();
       onClose();
     },
-    onError: (error) =>
-      toast.error(isApiError(error) ? error.message : 'Could not rename that'),
+    onError: (error) => {
+      if (isApiError(error) && error.suggestedName) return;
+      toast.error(isApiError(error) ? error.message : 'Could not rename that');
+    },
   });
+
+  const conflict =
+    rename.isError && isApiError(rename.error) && rename.error.suggestedName
+      ? { message: rename.error.message, suggestion: rename.error.suggestedName }
+      : null;
 
   const unchanged = entry ? name.trim() === entry.name : true;
 
@@ -76,9 +83,28 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
               id="rename-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              aria-invalid={Boolean(conflict)}
+              aria-describedby={conflict ? 'rename-conflict' : undefined}
               autoFocus
               maxLength={255}
             />
+
+            {conflict && (
+              <div id="rename-conflict" role="alert" className="space-y-2 pt-1">
+                <p className="text-sm text-destructive">{conflict.message}</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setName(conflict.suggestion);
+                    rename.reset();
+                  }}
+                >
+                  Use “{conflict.suggestion}”
+                </Button>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

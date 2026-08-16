@@ -18,7 +18,7 @@ const STATUS_BY_CODE: Record<string, HttpStatus> = {
 };
 
 interface ErrorBody {
-  error: { code: string; message: string };
+  error: { code: string; message: string; details?: Record<string, unknown> };
 }
 
 @Catch()
@@ -39,7 +39,13 @@ export class DomainExceptionFilter implements ExceptionFilter {
       }
       return {
         status,
-        body: { error: { code: exception.code, message: exception.message } },
+        body: {
+          error: {
+            code: exception.code,
+            message: exception.message,
+            ...(exception.details ? { details: exception.details } : {}),
+          },
+        },
       };
     }
 

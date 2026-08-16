@@ -29,12 +29,18 @@ export class ResourceName {
     return new ResourceName(trimmed);
   }
 
-  withSuffix(n: number): ResourceName {
+  get stem(): string {
     const dot = this.value.lastIndexOf('.');
-    const hasExtension = dot > 0;
-    const stem = hasExtension ? this.value.slice(0, dot) : this.value;
-    const extension = hasExtension ? this.value.slice(dot) : '';
-    return ResourceName.create(`${stem} (${n})${extension}`);
+    return dot > 0 ? this.value.slice(0, dot) : this.value;
+  }
+
+  get extension(): string {
+    const dot = this.value.lastIndexOf('.');
+    return dot > 0 ? this.value.slice(dot) : '';
+  }
+
+  withSuffix(n: number): ResourceName {
+    return ResourceName.create(`${this.stem} (${n})${this.extension}`);
   }
 
   equals(other: ResourceName): boolean {

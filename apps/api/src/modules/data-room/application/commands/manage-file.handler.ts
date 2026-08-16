@@ -3,9 +3,12 @@ import { ConflictError, NotFoundError } from '../../../../shared/domain/domain-e
 import { isUniqueViolation } from '../../../../shared/application/unique-violation';
 import { AccessResolver, Caller } from '../../../sharing/application/access-resolver';
 import { StoragePort } from '../../../storage/application/ports/storage.port';
+import { ResourceName } from '../../../../shared/domain/resource-name';
 import { DataRoomFile } from '../../domain/file';
 import { FileRepositoryPort } from '../ports/file.repository';
 import { FolderRepositoryPort } from '../ports/folder.repository';
+
+const MAX_SUFFIX_ATTEMPTS = 200;
 
 @Injectable()
 export class ManageFileHandler {
@@ -23,20 +26,44 @@ export class ManageFileHandler {
     input: { dataRoomId: string; fileId: string; name: string },
   ): Promise<DataRoomFile> {
     const file = await this.load(caller, input.dataRoomId, input.fileId);
+    const folderId = file.folderId;
     file.rename(input.name);
 
     try {
       await this.files.update(file);
     } catch (error) {
       if (isUniqueViolation(error)) {
+        const suggestion = await this.firstFreeName(
+          input.dataRoomId,
+          folderId,
+          file.name,
+        );
         throw new ConflictError(
           `A file named "${file.name.value}" already exists in this folder`,
+          { suggestedName: suggestion.value },
         );
       }
       throw error;
     }
 
     return file;
+  }
+
+  private async firstFreeName(
+    dataRoomId: string,
+    folderId: string | null,
+    desired: ResourceName,
+  ): Promise<ResourceName> {
+    const taken = new Set(
+      await this.files.listNamesStartingWith(dataRoomId, folderId, desired.stem),
+    );
+
+    for (let n = 2; n <= MAX_SUFFIX_ATTEMPTS; n++) {
+      const candidate = desired.withSuffix(n);
+      if (!taken.has(candidate.value)) return candidate;
+    }
+
+    return desired.withSuffix(Date.now());
   }
 
   async move(

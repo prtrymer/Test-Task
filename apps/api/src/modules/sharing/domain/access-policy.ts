@@ -42,14 +42,4 @@ export class AccessPolicy {
       grantedBy: covering,
     };
   }
-
-  static canRead(input: {
-    userId: string | null;
-    dataRoomOwnerId: string;
-    target: AccessTarget;
-    shares: readonly Share[];
-    now: Date;
-  }): boolean {
-    return AccessPolicy.evaluate(input).canRead;
-  }
 }

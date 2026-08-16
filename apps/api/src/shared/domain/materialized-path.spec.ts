@@ -11,14 +11,12 @@ describe('MaterializedPath', () => {
     expect(root.value).toBe('/');
     expect(root.isRoot()).toBe(true);
     expect(root.depth).toBe(0);
-    expect(root.leafId).toBeNull();
   });
 
   it('appends ids as slash-delimited segments', () => {
     const path = MaterializedPath.root().append(a).append(b);
     expect(path.value).toBe(`/${a}/${b}/`);
     expect(path.depth).toBe(2);
-    expect(path.leafId).toBe(b);
     expect(path.segments).toEqual([a, b]);
   });
 
@@ -42,12 +40,6 @@ describe('MaterializedPath', () => {
   });
 
   describe('containment', () => {
-    it('treats a path as containing itself but not strictly', () => {
-      const path = MaterializedPath.root().append(a);
-      expect(path.contains(path)).toBe(true);
-      expect(path.strictlyContains(path)).toBe(false);
-    });
-
     it('contains its descendants', () => {
       const parent = MaterializedPath.root().append(a);
       const child = parent.append(b);
@@ -55,7 +47,6 @@ describe('MaterializedPath', () => {
 
       expect(parent.contains(child)).toBe(true);
       expect(parent.contains(grandchild)).toBe(true);
-      expect(parent.strictlyContains(grandchild)).toBe(true);
       expect(child.contains(parent)).toBe(false);
     });
 

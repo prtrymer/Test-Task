@@ -43,13 +43,16 @@ async function request<T>(
       response.status,
       (payload?.error?.code as ApiErrorCode) ?? 'UNKNOWN',
       payload?.error?.message ?? messageForStatus(response.status),
+      payload?.error?.details,
     );
   }
 
   return payload as T;
 }
 
-function safeParse(text: string): { error?: { code?: string; message?: string } } | null {
+function safeParse(text: string): {
+  error?: { code?: string; message?: string; details?: Record<string, unknown> };
+} | null {
   try {
     return JSON.parse(text);
   } catch {

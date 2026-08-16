@@ -40,10 +40,6 @@ export class MaterializedPath {
     return this.value === '/';
   }
 
-  get leafId(): string | null {
-    return this.segments.at(-1) ?? null;
-  }
-
   parent(): MaterializedPath {
     if (this.isRoot()) return this;
     const segments = this.segments.slice(0, -1);
@@ -52,10 +48,6 @@ export class MaterializedPath {
 
   contains(other: MaterializedPath): boolean {
     return other.value.startsWith(this.value);
-  }
-
-  strictlyContains(other: MaterializedPath): boolean {
-    return this.contains(other) && !this.equals(other);
   }
 
   toSubtreePattern(): string {

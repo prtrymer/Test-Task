@@ -18,4 +18,10 @@ export abstract class FileRepositoryPort {
   abstract delete(dataRoomId: string, id: string): Promise<void>;
 
   abstract listBlobPathnames(dataRoomId: string, fileId: string): Promise<string[]>;
+
+  abstract listNamesStartingWith(
+    dataRoomId: string,
+    folderId: string | null,
+    prefix: string,
+  ): Promise<string[]>;
 }

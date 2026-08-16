@@ -83,4 +83,16 @@ export class PrismaFileRepository extends FileRepositoryPort {
     });
     return rows.map((row) => row.blobPathname);
   }
+
+  async listNamesStartingWith(
+    dataRoomId: string,
+    folderId: string | null,
+    prefix: string,
+  ): Promise<string[]> {
+    const rows = await this.prisma.file.findMany({
+      where: { dataRoomId, folderId, name: { startsWith: prefix } },
+      select: { name: true },
+    });
+    return rows.map((row) => row.name);
+  }
 }

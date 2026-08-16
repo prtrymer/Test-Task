@@ -12,9 +12,15 @@ export class ApiError extends Error {
     readonly status: number,
     readonly code: ApiErrorCode,
     message: string,
+    readonly details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = 'ApiError';
+  }
+
+  get suggestedName(): string | null {
+    const value = this.details?.suggestedName;
+    return typeof value === 'string' ? value : null;
   }
 
   get isGone(): boolean {
