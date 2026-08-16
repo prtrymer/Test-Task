@@ -1,0 +1,19 @@
+{
+  "name": "acme-data-room",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Data Room — secure document repository for due diligence",
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "api:dev": "npm run start:dev --workspace @data-room/api",
+    "api:build": "npm run build --workspace @data-room/api",
+    "db:migrate": "npm run db:migrate --workspace @data-room/api",
+    "db:studio": "npm run db:studio --workspace @data-room/api",
+    "db:generate": "npm run db:generate --workspace @data-room/api"
+  }
+}
