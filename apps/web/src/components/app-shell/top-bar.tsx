@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -45,24 +46,33 @@ export function TopBar({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuLabel className="font-normal">
-            <span className="block truncate text-sm font-medium">
-              {user?.name ?? 'Signed in'}
-            </span>
-            <span className="block truncate text-xs text-muted-foreground">
-              {user?.email}
-            </span>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              onSignOut();
-              router.replace('/login');
-            }}
-          >
-            <LogOut className="size-4" aria-hidden />
-            Sign out
-          </DropdownMenuItem>
+          {/* The group is required, not decorative: DropdownMenuLabel maps to
+              Base UI's GroupLabel, which reads MenuGroupContext and throws if
+              it is rendered outside a group — taking the whole page down with
+              it. It also reads correctly here, labelling the account whose
+              session the item below ends. */}
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="font-normal">
+              <span className="block truncate text-sm font-medium">
+                {user?.name ?? 'Signed in'}
+              </span>
+              <span className="block truncate text-xs text-muted-foreground">
+                {user?.email}
+              </span>
+            </DropdownMenuLabel>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={() => {
+                onSignOut();
+                router.replace('/login');
+              }}
+            >
+              <LogOut className="size-4" aria-hidden />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

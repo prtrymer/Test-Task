@@ -60,7 +60,13 @@ export function DeleteDialog({ dataRoomId, entry, onClose, onDeleted }: Props) {
     <AlertDialog open={Boolean(entry)} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete “{entry?.name}”?</AlertDialogTitle>
+          {/* Filenames have no spaces to break on, so a long one would push the
+              dialog past its max-width and drag the footer out with it.
+              Wrapping rather than truncating: you have to be able to read what
+              you are about to destroy. */}
+          <AlertDialogTitle className="[overflow-wrap:anywhere]">
+            Delete “{entry?.name}”?
+          </AlertDialogTitle>
           <AlertDialogDescription render={<div />}>
             <div className="space-y-3">
               {!isFolder && <p>This file and all of its versions will be deleted.</p>}
