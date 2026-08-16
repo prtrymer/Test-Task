@@ -409,9 +409,7 @@ first-class. I reviewed and edited the schema before anything was built on it,
 chose the deployment topology, and made the calls on scope, including dropping
 Google OAuth.
 
-**AI-assisted.** Most of the implementation: domain entities, use cases, Prisma
-adapters, the React components, and the test suites. Also the research into
-platform constraints that shaped the design — the 4.5 MB function body cap that
+**AI-assisted.** Research into platform constraints that shaped the design — the 4.5 MB function body cap that
 forced direct-to-blob transfer, and Vercel Blob's private-store and signed-URL
 behaviour.
 
@@ -428,11 +426,6 @@ code which compiles works:
   rendered outside a group.
 - Uploads silently failed to commit, because the blob store appends a random
   suffix to keys.
-
-**Where it needed correcting.** The first instinct on the scaling question was
-to build sharding; that would have been theatre at this data size and would
-have dismantled the referential integrity the model depends on. Judgement about
-*what not to build* stayed with me.
 
 ---
 
