@@ -29,7 +29,7 @@ export function RoomList() {
 
   if (rooms.isPending) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-3 p-6">
         {[0, 1, 2].map((i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}
@@ -38,11 +38,15 @@ export function RoomList() {
   }
 
   if (rooms.isError) {
-    return <ErrorState error={rooms.error} onRetry={() => rooms.refetch()} />;
+    return (
+      <div className="p-6">
+        <ErrorState error={rooms.error} onRetry={() => rooms.refetch()} />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Data rooms</h1>

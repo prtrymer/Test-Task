@@ -15,9 +15,14 @@ export const session = {
     return window.localStorage.getItem(TOKEN_KEY);
   },
 
-  getUser(): User | null {
+  /** The stored JSON, unparsed — a stable snapshot for useSyncExternalStore. */
+  getRawUser(): string | null {
     if (typeof window === 'undefined') return null;
-    const raw = window.localStorage.getItem(USER_KEY);
+    return window.localStorage.getItem(USER_KEY);
+  },
+
+  getUser(): User | null {
+    const raw = session.getRawUser();
     if (!raw) return null;
     try {
       return JSON.parse(raw) as User;

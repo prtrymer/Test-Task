@@ -91,9 +91,17 @@ export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
 
         // Rejected up front, so the user is not left watching a doomed transfer.
         if (file.type !== ACCEPTED_TYPE) {
-          rejected.push({ ...base, status: 'error', error: 'Only PDF files are accepted' });
+          rejected.push({
+            ...base,
+            status: 'error',
+            error: 'Only PDF files are accepted',
+          });
         } else if (file.size > MAX_BYTES) {
-          rejected.push({ ...base, status: 'error', error: 'Larger than the 100 MB limit' });
+          rejected.push({
+            ...base,
+            status: 'error',
+            error: 'Larger than the 100 MB limit',
+          });
         } else {
           accepted.push({ id, file });
           rejected.push({ ...base, status: 'queued' });
@@ -105,13 +113,16 @@ export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
       // A small worker pool rather than Promise.all, so dropping fifty files
       // does not open fifty simultaneous transfers.
       const queue = [...accepted];
-      const workers = Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
-        let next = queue.shift();
-        while (next) {
-          await runOne(next.id, next.file);
-          next = queue.shift();
-        }
-      });
+      const workers = Array.from(
+        { length: Math.min(CONCURRENCY, queue.length) },
+        async () => {
+          let next = queue.shift();
+          while (next) {
+            await runOne(next.id, next.file);
+            next = queue.shift();
+          }
+        },
+      );
 
       await Promise.all(workers);
       onCommitted();
@@ -127,7 +138,9 @@ export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
     setItems((current) => current.filter((item) => item.id !== id));
   }, []);
 
-  const active = items.some((item) => item.status === 'uploading' || item.status === 'finalising');
+  const active = items.some(
+    (item) => item.status === 'uploading' || item.status === 'finalising',
+  );
 
   return { items, enqueue, clearFinished, dismiss, active };
 }

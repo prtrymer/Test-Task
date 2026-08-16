@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,10 +27,15 @@ interface Props {
 
 export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
   const [name, setName] = useState('');
+  const [seededFor, setSeededFor] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (entry) setName(entry.name);
-  }, [entry]);
+  // Seeding during render rather than in an effect: React re-runs this component
+  // before committing, so the input is correct on first paint instead of
+  // flashing the previous entry's name.
+  if (entry && entry.id !== seededFor) {
+    setSeededFor(entry.id);
+    setName(entry.name);
+  }
 
   const rename = useMutation({
     mutationFn: async (): Promise<void> => {
@@ -62,7 +67,9 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
           }}
         >
           <DialogHeader>
-            <DialogTitle>Rename {entry?.kind === 'folder' ? 'folder' : 'file'}</DialogTitle>
+            <DialogTitle>
+              Rename {entry?.kind === 'folder' ? 'folder' : 'file'}
+            </DialogTitle>
             <DialogDescription>
               {/* Uploads resolve a clash by versioning; a rename cannot, because
                   the two files have separate histories. */}
@@ -85,7 +92,10 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
             <Button type="button" variant="ghost" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!name.trim() || unchanged || rename.isPending}>
+            <Button
+              type="submit"
+              disabled={!name.trim() || unchanged || rename.isPending}
+            >
               {rename.isPending ? 'Saving…' : 'Save'}
             </Button>
           </DialogFooter>

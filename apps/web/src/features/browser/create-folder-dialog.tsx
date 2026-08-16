@@ -2,7 +2,6 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FolderPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,11 +20,18 @@ import { folders } from '@/lib/api/resources';
 interface Props {
   dataRoomId: string;
   parentId: string | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onCreated: () => void;
 }
 
-export function CreateFolderDialog({ dataRoomId, parentId, onCreated }: Props) {
-  const [open, setOpen] = useState(false);
+export function CreateFolderDialog({
+  dataRoomId,
+  parentId,
+  open,
+  onOpenChange,
+  onCreated,
+}: Props) {
   const [name, setName] = useState('');
 
   const create = useMutation({
@@ -33,7 +39,7 @@ export function CreateFolderDialog({ dataRoomId, parentId, onCreated }: Props) {
     onSuccess: (folder) => {
       toast.success(`Created “${folder.name}”`);
       onCreated();
-      setOpen(false);
+      onOpenChange(false);
       setName('');
     },
     onError: (error) =>
@@ -41,56 +47,49 @@ export function CreateFolderDialog({ dataRoomId, parentId, onCreated }: Props) {
   });
 
   return (
-    <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        <FolderPlus className="size-4" aria-hidden />
-        New folder
-      </Button>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        onOpenChange(next);
+        if (!next) setName('');
+      }}
+    >
+      <DialogContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (name.trim()) create.mutate();
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle>New folder</DialogTitle>
+            <DialogDescription>
+              Created inside the folder you&apos;re currently viewing.
+            </DialogDescription>
+          </DialogHeader>
 
-      <Dialog
-        open={open}
-        onOpenChange={(next) => {
-          setOpen(next);
-          if (!next) setName('');
-        }}
-      >
-        <DialogContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (name.trim()) create.mutate();
-            }}
-          >
-            <DialogHeader>
-              <DialogTitle>New folder</DialogTitle>
-              <DialogDescription>
-                Created inside the folder you&apos;re currently viewing.
-              </DialogDescription>
-            </DialogHeader>
+          <div className="space-y-2 py-4">
+            <Label htmlFor="folder-name">Name</Label>
+            <Input
+              id="folder-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Financials"
+              autoFocus
+              maxLength={255}
+            />
+          </div>
 
-            <div className="space-y-2 py-4">
-              <Label htmlFor="folder-name">Name</Label>
-              <Input
-                id="folder-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Financials"
-                autoFocus
-                maxLength={255}
-              />
-            </div>
-
-            <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={!name.trim() || create.isPending}>
-                {create.isPending ? 'Creating…' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+          <DialogFooter>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!name.trim() || create.isPending}>
+              {create.isPending ? 'Creating…' : 'Create'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

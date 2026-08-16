@@ -19,14 +19,21 @@ const SUBJECT_LABEL = {
 export default function SharedWithMePage() {
   const list = useQuery({ queryKey: keys.sharedWithMe, queryFn: shares.sharedWithMe });
 
-  if (list.isPending) return <Skeleton className="h-24 w-full" />;
-  if (list.isError) return <ErrorState error={list.error} onRetry={() => list.refetch()} />;
+  if (list.isPending) return <Skeleton className="m-6 h-24" />;
+  if (list.isError)
+    return (
+      <div className="p-6">
+        <ErrorState error={list.error} onRetry={() => list.refetch()} />
+      </div>
+    );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Shared with me</h1>
-        <p className="text-sm text-muted-foreground">Read-only access granted by others</p>
+        <p className="text-sm text-muted-foreground">
+          Read-only access granted by others
+        </p>
       </div>
 
       {list.data.items.length === 0 ? (

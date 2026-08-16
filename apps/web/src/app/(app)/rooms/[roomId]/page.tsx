@@ -20,21 +20,36 @@ export default function RoomPage({ params }: { params: Promise<{ roomId: string 
     queryFn: () => dataRooms.get(roomId),
   });
 
-  if (room.isPending) return <Skeleton className="h-9 w-64" />;
-  if (room.isError) return <ErrorState error={room.error} onRetry={() => room.refetch()} />;
+  if (room.isPending) {
+    return (
+      <div className="p-6">
+        <Skeleton className="h-9 w-64" />
+      </div>
+    );
+  }
+
+  if (room.isError) {
+    return (
+      <div className="p-6">
+        <ErrorState error={room.error} onRetry={() => room.refetch()} />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{room.data.name}</h1>
+    <>
+      <div className="flex items-center justify-between gap-3 border-b px-6 py-4">
+        <h1 className="truncate text-xl font-medium">{room.data.name}</h1>
         <Button
           variant="outline"
+          size="sm"
+          className="shrink-0 rounded-full"
           onClick={() =>
             setSharingRoom({ subjectType: 'DATA_ROOM', label: room.data.name })
           }
         >
           <Share2 className="size-4" aria-hidden />
-          Share data room
+          Share
         </Button>
       </div>
 
@@ -45,6 +60,6 @@ export default function RoomPage({ params }: { params: Promise<{ roomId: string 
         target={sharingRoom}
         onClose={() => setSharingRoom(null)}
       />
-    </div>
+    </>
   );
 }

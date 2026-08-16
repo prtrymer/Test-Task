@@ -26,8 +26,13 @@ export default function SharedItemPage({
 
   const list = useQuery({ queryKey: keys.sharedWithMe, queryFn: shares.sharedWithMe });
 
-  if (list.isPending) return <Skeleton className="h-24 w-full" />;
-  if (list.isError) return <ErrorState error={list.error} onRetry={() => list.refetch()} />;
+  if (list.isPending) return <Skeleton className="m-6 h-24" />;
+  if (list.isError)
+    return (
+      <div className="p-6">
+        <ErrorState error={list.error} onRetry={() => list.refetch()} />
+      </div>
+    );
 
   const grant = list.data.items.find((item) => item.shareId === shareId);
 
@@ -35,11 +40,13 @@ export default function SharedItemPage({
   // was deleted. Same message either way, because the API does not distinguish.
   if (!grant) {
     return (
-      <EmptyState
-        icon={Inbox}
-        title="This is no longer available"
-        description="It may have been deleted, or the owner may have revoked your access."
-      />
+      <div className="p-6">
+        <EmptyState
+          icon={Inbox}
+          title="This is no longer available"
+          description="It may have been deleted, or the owner may have revoked your access."
+        />
+      </div>
     );
   }
 
@@ -54,8 +61,8 @@ export default function SharedItemPage({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{grant.dataRoomName}</h1>
           <p className="text-sm text-muted-foreground">Shared by {grant.ownerEmail}</p>

@@ -49,7 +49,9 @@ export function FileViewer({ dataRoomId, fileId, fileName, shareToken, onClose }
         <div className="min-h-0 flex-1">
           {file.isPending && <Skeleton className="size-full" />}
 
-          {file.isError && <ErrorState error={file.error} onRetry={() => file.refetch()} />}
+          {file.isError && (
+            <ErrorState error={file.error} onRetry={() => file.refetch()} />
+          )}
 
           {file.data && (
             <iframe

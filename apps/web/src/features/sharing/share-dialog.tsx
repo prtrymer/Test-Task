@@ -239,7 +239,10 @@ function ShareList({
   return (
     <ul className="divide-y rounded-md border">
       {items.map((share) => (
-        <li key={share.id} className="flex items-center justify-between gap-3 px-3 py-2.5">
+        <li
+          key={share.id}
+          className="flex items-center justify-between gap-3 px-3 py-2.5"
+        >
           <span className="min-w-0 truncate text-sm">
             {share.mode === 'PUBLIC_LINK' ? 'Anyone with the link' : 'Invited person'}
           </span>
