@@ -12,11 +12,12 @@ const UPLOAD_WINDOW_SECONDS = 60 * 30;
 @Injectable()
 export class VercelBlobStorage extends StoragePort {
   private readonly logger = new Logger(VercelBlobStorage.name);
-  private readonly token: string;
+  private readonly auth: { token?: string };
 
   constructor(config: ConfigService) {
     super();
-    this.token = config.get<string>('BLOB_READ_WRITE_TOKEN', '');
+    const token = config.get<string>('BLOB_READ_WRITE_TOKEN')?.trim();
+    this.auth = token ? { token } : {};
   }
 
   async createUploadTicket(input: {
@@ -27,7 +28,7 @@ export class VercelBlobStorage extends StoragePort {
     const validUntil = Date.now() + UPLOAD_WINDOW_SECONDS * 1000;
 
     const signed = await issueSignedToken({
-      token: this.token,
+      ...this.auth,
       pathname: input.pathname,
       operations: ['put'],
       validUntil,
@@ -59,7 +60,7 @@ export class VercelBlobStorage extends StoragePort {
     const validUntil = Date.now() + ttlSeconds * 1000;
 
     const signed = await issueSignedToken({
-      token: this.token,
+      ...this.auth,
       pathname,
       operations: ['get'],
       validUntil,
@@ -77,7 +78,7 @@ export class VercelBlobStorage extends StoragePort {
 
   async head(pathname: string): Promise<StoredObject | null> {
     try {
-      const blob = await head(pathname, { token: this.token });
+      const blob = await head(pathname, { ...this.auth });
       return {
         sizeBytes: BigInt(blob.size),
         contentType: blob.contentType ?? 'application/octet-stream',
@@ -90,6 +91,6 @@ export class VercelBlobStorage extends StoragePort {
 
   async delete(pathnames: string[]): Promise<void> {
     if (!pathnames.length) return;
-    await del(pathnames, { token: this.token });
+    await del(pathnames, { ...this.auth });
   }
 }
