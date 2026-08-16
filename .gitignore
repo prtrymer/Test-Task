@@ -39,3 +39,6 @@ coverage/
 
 # Take-home assignment brief — kept out of the public repo
 GS1 Full Stack - dev test task.md
+
+# Vercel build output
+.vercel/
