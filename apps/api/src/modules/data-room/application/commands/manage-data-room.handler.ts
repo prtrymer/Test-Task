@@ -4,10 +4,7 @@ import { IdGeneratorPort } from '../../../../shared/application/ports/id-generat
 import { ResourceName } from '../../../../shared/domain/resource-name';
 import { AccessResolver, Caller } from '../../../sharing/application/access-resolver';
 import { StoragePort } from '../../../storage/application/ports/storage.port';
-import {
-  DataRoomRecord,
-  DataRoomRepositoryPort,
-} from '../ports/data-room.repository';
+import { DataRoomRecord, DataRoomRepositoryPort } from '../ports/data-room.repository';
 
 @Injectable()
 export class ManageDataRoomHandler {

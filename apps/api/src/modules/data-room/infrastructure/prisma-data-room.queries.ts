@@ -69,9 +69,7 @@ export class PrismaDataRoomQueries extends DataRoomQueriesPort {
         ? Prisma.sql`to_char("updatedAt" AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS')`
         : Prisma.sql`"name"`;
 
-    const folderMatch = folderId
-      ? Prisma.sql`= ${folderId}::uuid`
-      : Prisma.sql`IS NULL`;
+    const folderMatch = folderId ? Prisma.sql`= ${folderId}::uuid` : Prisma.sql`IS NULL`;
 
     // Fetch one extra row to learn whether another page exists.
     const take = limit + 1;

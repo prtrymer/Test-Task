@@ -52,7 +52,8 @@ export class ManageFileHandler {
     const folder = input.folderId
       ? await this.folders.findById(input.dataRoomId, input.folderId)
       : null;
-    if (input.folderId && !folder) throw new NotFoundError('Destination folder not found');
+    if (input.folderId && !folder)
+      throw new NotFoundError('Destination folder not found');
 
     file.moveTo(
       folder ? { id: folder.id, dataRoomId: folder.dataRoomId, path: folder.path } : null,

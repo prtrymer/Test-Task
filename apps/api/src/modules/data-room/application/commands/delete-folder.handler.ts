@@ -54,7 +54,10 @@ export class DeleteFolderHandler {
       command.dataRoomId,
       folder.path.value,
     );
-    const blobs = await this.folders.listBlobPathnamesUnder(command.dataRoomId, folder.path);
+    const blobs = await this.folders.listBlobPathnamesUnder(
+      command.dataRoomId,
+      folder.path,
+    );
 
     // Database first: it cascades to subfolders, files, versions and shares in
     // one transaction. Blobs are cleaned up afterwards because the reverse

@@ -3,7 +3,10 @@ import { NotFoundError, ValidationError } from '../../../../shared/domain/domain
 import { IdGeneratorPort } from '../../../../shared/application/ports/id-generator.port';
 import { ResourceName } from '../../../../shared/domain/resource-name';
 import { AccessResolver, Caller } from '../../../sharing/application/access-resolver';
-import { StoragePort, UploadTicket } from '../../../storage/application/ports/storage.port';
+import {
+  StoragePort,
+  UploadTicket,
+} from '../../../storage/application/ports/storage.port';
 import { FolderRepositoryPort } from '../ports/folder.repository';
 
 export interface RequestUploadCommand {

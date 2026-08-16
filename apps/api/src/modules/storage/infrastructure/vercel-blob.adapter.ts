@@ -51,6 +51,10 @@ export class VercelBlobStorage extends StoragePort {
       maximumSizeInBytes: input.maxSizeBytes,
       // Pathnames are unique per version, so an overwrite would be a bug.
       allowOverwrite: false,
+      // Without this the store appends its own random suffix to the object key,
+      // and the commit step's head() lookup on the requested pathname misses.
+      // The pathname already carries a generated id, so it is unique already.
+      addRandomSuffix: false,
     });
 
     return {

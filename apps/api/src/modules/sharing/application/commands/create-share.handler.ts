@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ConflictError, NotFoundError, ValidationError } from '../../../../shared/domain/domain-error';
+import {
+  ConflictError,
+  NotFoundError,
+  ValidationError,
+} from '../../../../shared/domain/domain-error';
 import { IdGeneratorPort } from '../../../../shared/application/ports/id-generator.port';
 import { isUniqueViolation } from '../../../../shared/application/unique-violation';
 import { FileRepositoryPort } from '../../../data-room/application/ports/file.repository';
@@ -59,7 +63,9 @@ export class CreateShareHandler {
       throw new ValidationError('A restricted share needs a recipient');
     }
 
-    const grantee = await this.users.findByEmail(command.granteeEmail.trim().toLowerCase());
+    const grantee = await this.users.findByEmail(
+      command.granteeEmail.trim().toLowerCase(),
+    );
     if (!grantee) {
       // Deliberately explicit: the owner needs to know why nothing happened.
       throw new NotFoundError(`No account exists for ${command.granteeEmail}`);
@@ -96,7 +102,10 @@ export class CreateShareHandler {
 
       case 'FOLDER': {
         if (!command.subjectFolderId) throw new ValidationError('No folder specified');
-        const folder = await this.folders.findById(command.dataRoomId, command.subjectFolderId);
+        const folder = await this.folders.findById(
+          command.dataRoomId,
+          command.subjectFolderId,
+        );
         if (!folder) throw new NotFoundError('Folder not found');
         return { type: 'FOLDER', folderId: folder.id, path: folder.path };
       }

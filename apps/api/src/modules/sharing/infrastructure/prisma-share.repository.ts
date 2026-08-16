@@ -87,7 +87,9 @@ export class PrismaShareRepository extends ShareRepositoryPort {
         subjectType: true,
         subjectFolderId: true,
         subjectFileId: true,
-        dataRoom: { select: { id: true, name: true, owner: { select: { email: true } } } },
+        dataRoom: {
+          select: { id: true, name: true, owner: { select: { email: true } } },
+        },
       },
       orderBy: { createdAt: 'desc' },
     });

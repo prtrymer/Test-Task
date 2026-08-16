@@ -16,7 +16,12 @@ import { AuthenticatedGuard } from '../../../identity/interface/http/authenticat
 import { CurrentCaller } from '../../../identity/interface/http/current-user.decorator';
 import { ManageDataRoomHandler } from '../../application/commands/manage-data-room.handler';
 import { BrowseHandler } from '../../application/queries/browse.handler';
-import { CreateDataRoomDto, ListDirectoryQueryDto, RenameDto, SearchQueryDto } from './dto';
+import {
+  CreateDataRoomDto,
+  ListDirectoryQueryDto,
+  RenameDto,
+  SearchQueryDto,
+} from './dto';
 import { presentEntry, presentStats } from './presenters';
 
 @Controller('data-rooms')

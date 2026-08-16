@@ -103,7 +103,11 @@ export class FilesController {
     @Body() body: MoveFileDto,
   ) {
     return presentFile(
-      await this.manage.move(caller, { dataRoomId, fileId, folderId: body.folderId ?? null }),
+      await this.manage.move(caller, {
+        dataRoomId,
+        fileId,
+        folderId: body.folderId ?? null,
+      }),
     );
   }
 

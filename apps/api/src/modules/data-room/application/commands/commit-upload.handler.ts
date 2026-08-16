@@ -38,7 +38,10 @@ export class CommitUploadHandler {
     private readonly ids: IdGeneratorPort,
   ) {}
 
-  async execute(caller: Caller, command: CommitUploadCommand): Promise<CommitUploadResult> {
+  async execute(
+    caller: Caller,
+    command: CommitUploadCommand,
+  ): Promise<CommitUploadResult> {
     await this.access.requireWrite(caller, {
       kind: 'DATA_ROOM',
       dataRoomId: command.dataRoomId,

@@ -8,8 +8,18 @@ describe('Folder', () => {
   const GRANDCHILD_ID = 'cccccccc-0000-0000-0000-000000000003';
 
   const makeTree = () => {
-    const root = Folder.create({ id: ROOT_ID, dataRoomId: ROOM, parent: null, name: 'Financials' });
-    const child = Folder.create({ id: CHILD_ID, dataRoomId: ROOM, parent: root, name: 'Q4' });
+    const root = Folder.create({
+      id: ROOT_ID,
+      dataRoomId: ROOM,
+      parent: null,
+      name: 'Financials',
+    });
+    const child = Folder.create({
+      id: CHILD_ID,
+      dataRoomId: ROOM,
+      parent: root,
+      name: 'Q4',
+    });
     const grandchild = Folder.create({
       id: GRANDCHILD_ID,
       dataRoomId: ROOM,

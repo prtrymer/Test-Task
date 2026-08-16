@@ -4,6 +4,7 @@ import { IdentityModule } from '../identity/identity.module';
 import { AccessResolver } from './application/access-resolver';
 import { CreateShareHandler } from './application/commands/create-share.handler';
 import { RevokeShareHandler } from './application/commands/revoke-share.handler';
+import { ResolveShareLinkHandler } from './application/queries/resolve-share-link.handler';
 import { ShareRepositoryPort } from './application/ports/share.repository';
 import { PrismaShareRepository } from './infrastructure/prisma-share.repository';
 import { SharesController } from './interface/http/shares.controller';
@@ -20,6 +21,7 @@ import { SharesController } from './interface/http/shares.controller';
     AccessResolver,
     CreateShareHandler,
     RevokeShareHandler,
+    ResolveShareLinkHandler,
     { provide: ShareRepositoryPort, useClass: PrismaShareRepository },
   ],
   exports: [AccessResolver, ShareRepositoryPort],

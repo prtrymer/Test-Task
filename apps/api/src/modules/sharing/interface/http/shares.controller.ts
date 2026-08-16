@@ -17,6 +17,7 @@ import { CurrentCaller } from '../../../identity/interface/http/current-user.dec
 import { Caller } from '../../application/access-resolver';
 import { CreateShareHandler } from '../../application/commands/create-share.handler';
 import { RevokeShareHandler } from '../../application/commands/revoke-share.handler';
+import { ResolveShareLinkHandler } from '../../application/queries/resolve-share-link.handler';
 import { ShareRepositoryPort } from '../../application/ports/share.repository';
 import { Share } from '../../domain/share';
 
@@ -63,8 +64,18 @@ export class SharesController {
   constructor(
     private readonly create_: CreateShareHandler,
     private readonly revoke_: RevokeShareHandler,
+    private readonly resolveLink: ResolveShareLinkHandler,
     private readonly shares: ShareRepositoryPort,
   ) {}
+
+  /**
+   * The only unauthenticated route: turns a public link token into the room it
+   * opens, so an anonymous visitor can bootstrap the view.
+   */
+  @Get('share-links/resolve')
+  async resolve(@CurrentCaller() caller: Caller) {
+    return this.resolveLink.execute(caller.linkToken ?? null);
+  }
 
   @Post('data-rooms/:dataRoomId/shares')
   @UseGuards(AuthenticatedGuard)

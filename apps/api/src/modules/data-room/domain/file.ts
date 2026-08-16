@@ -106,7 +106,9 @@ export class DataRoomFile {
     this.state.name = ResourceName.create(newName);
   }
 
-  moveTo(folder: { id: string; dataRoomId: string; path: MaterializedPath } | null): void {
+  moveTo(
+    folder: { id: string; dataRoomId: string; path: MaterializedPath } | null,
+  ): void {
     if (folder && folder.dataRoomId !== this.dataRoomId) {
       throw new ValidationError('A file cannot be moved to another data room');
     }

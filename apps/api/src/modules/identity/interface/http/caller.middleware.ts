@@ -12,7 +12,11 @@ import { AuthenticatedRequest } from './current-user.decorator';
 export class CallerMiddleware implements NestMiddleware {
   constructor(private readonly tokens: TokenIssuerPort) {}
 
-  async use(req: AuthenticatedRequest, _res: Response, next: NextFunction): Promise<void> {
+  async use(
+    req: AuthenticatedRequest,
+    _res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     const bearer = req.headers.authorization?.replace(/^Bearer\s+/i, '');
     const claims = bearer ? await this.tokens.verify(bearer) : null;
 

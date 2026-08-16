@@ -36,7 +36,10 @@ describe('AccessPolicy', () => {
   };
 
   let counter = 0;
-  const restricted = (subject: ShareSubject, overrides: Partial<{ expiresAt: Date }> = {}) =>
+  const restricted = (
+    subject: ShareSubject,
+    overrides: Partial<{ expiresAt: Date }> = {},
+  ) =>
     Share.createRestricted({
       id: `share-${counter++}`,
       dataRoomId: ROOM,
@@ -97,7 +100,11 @@ describe('AccessPolicy', () => {
 
     it('do not leak a sibling whose id shares a prefix', () => {
       const shortShare = [
-        restricted({ type: 'FOLDER', folderId: 'a', path: MaterializedPath.root().append('a') }),
+        restricted({
+          type: 'FOLDER',
+          folderId: 'a',
+          path: MaterializedPath.root().append('a'),
+        }),
       ];
       const siblingFile: AccessTarget = {
         kind: 'FILE',

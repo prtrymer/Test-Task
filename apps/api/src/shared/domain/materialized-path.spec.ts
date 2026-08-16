@@ -24,7 +24,9 @@ describe('MaterializedPath', () => {
 
   it('rejects a malformed path', () => {
     expect(() => MaterializedPath.fromString('no-slashes')).toThrow(ValidationError);
-    expect(() => MaterializedPath.fromString('/missing-trailing')).toThrow(ValidationError);
+    expect(() => MaterializedPath.fromString('/missing-trailing')).toThrow(
+      ValidationError,
+    );
   });
 
   it('rejects a segment containing a slash', () => {
