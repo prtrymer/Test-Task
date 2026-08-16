@@ -10,7 +10,7 @@ import { EntryContextMenu, EntryOverflowMenu, type EntryHandlers } from './entry
 interface Props {
   entries: DirectoryEntry[];
   handlers: EntryHandlers;
-  /** Read-only viewers get no action affordances at all. */
+
   interactive?: boolean;
 }
 
@@ -27,11 +27,6 @@ function EntryIcon({ entry }: { entry: DirectoryEntry }) {
   );
 }
 
-/**
- * Renders each item as an `<li>`, optionally turned into a context-menu
- * trigger. The `<li>` is always the direct child of the list, so grid layout
- * and list semantics both hold.
- */
 function Item({
   entry,
   handlers,
@@ -103,8 +98,6 @@ export function EntryList({ entries, handlers, interactive = true }: Props) {
 
             <span className="flex justify-end">
               {interactive && (
-                // Revealed on hover or keyboard focus, as Drive does. The column
-                // stays reserved either way so rows never shift.
                 <span className="opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
                   <EntryOverflowMenu entry={entry} handlers={handlers} />
                 </span>

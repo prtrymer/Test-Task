@@ -73,7 +73,6 @@ export function BrowserToolbar({
       <div className="flex items-center gap-2">
         <Select value={sort} onValueChange={(value) => onSortChange(value as SortMode)}>
           <SelectTrigger size="sm" className="w-[11rem]" aria-label="Sort by">
-            {/* Base UI renders the raw value unless given a formatter. */}
             <SelectValue>{(value) => SORT_LABELS[value as SortMode]}</SelectValue>
           </SelectTrigger>
           <SelectContent>

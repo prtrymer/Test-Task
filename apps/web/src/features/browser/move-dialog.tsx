@@ -26,21 +26,11 @@ interface Props {
   onMoved: () => void;
 }
 
-/**
- * A folder picker that browses the tree one level at a time.
- *
- * Moving a folder into its own subtree is rejected by the domain, but the
- * destination is also filtered here so the invalid choice is never offered —
- * an error you cannot click is better than one you can.
- */
 export function MoveDialog({ dataRoomId, roomName, entry, onClose, onMoved }: Props) {
   const [destination, setDestination] = useState<string | null>(null);
   const [trail, setTrail] = useState<{ id: string; name: string }[]>([]);
   const [openedFor, setOpenedFor] = useState<string | null>(null);
 
-  // Reset the picker when a different item is being moved. Done during render
-  // rather than in an effect so the dialog never shows the previous target's
-  // browsing position.
   if (entry && entry.id !== openedFor) {
     setOpenedFor(entry.id);
     setDestination(null);
@@ -73,7 +63,6 @@ export function MoveDialog({ dataRoomId, roomName, entry, onClose, onMoved }: Pr
 
   const candidates = (listing.data?.items ?? []).filter(
     (item): item is Extract<DirectoryEntry, { kind: 'folder' }> =>
-      // Its own subtree is not a legal destination, and neither is itself.
       item.kind === 'folder' && item.id !== entry?.id,
   );
 
@@ -161,9 +150,7 @@ export function MoveDialog({ dataRoomId, roomName, entry, onClose, onMoved }: Pr
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          {/* Moving somewhere it already sits is refused by the server, which
-              surfaces as a toast — the listing rows do not carry a parent id,
-              so the client cannot reliably pre-empt it. */}
+
           <Button onClick={() => move.mutate()} disabled={move.isPending}>
             {move.isPending ? 'Moving…' : 'Move here'}
           </Button>

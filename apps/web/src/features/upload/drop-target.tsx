@@ -10,15 +10,9 @@ interface Props {
   children: ReactNode;
 }
 
-/**
- * The whole content area is the drop target, with the overlay appearing only
- * while something is being dragged — Drive has no permanent upload box, and a
- * box that is always visible wastes the space the file list needs.
- */
 export function DropTarget({ onFiles, disabled = false, label, children }: Props) {
   const [isOver, setIsOver] = useState(false);
-  // dragenter/leave fire for every descendant, so a plain boolean flickers as
-  // the pointer crosses child elements.
+
   const depth = useRef(0);
 
   if (disabled) return <>{children}</>;

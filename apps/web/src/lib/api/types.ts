@@ -1,10 +1,3 @@
-/**
- * Mirrors the API's response shapes.
- *
- * Byte counts arrive as strings: they are BigInt on the server and JSON has no
- * integer type wide enough to carry them safely.
- */
-
 export interface User {
   id: string;
   email: string;
@@ -66,7 +59,6 @@ export interface FileResource {
 }
 
 export interface CommittedFile extends FileResource {
-  /** True when an existing file gained a version rather than a new row appearing. */
   versioned: boolean;
 }
 

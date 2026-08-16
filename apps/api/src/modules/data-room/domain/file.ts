@@ -18,10 +18,6 @@ export interface FileState {
   versionNumber: number;
 }
 
-/**
- * A logical document. The current version's content is held inline; superseded
- * versions live in FileVersion rows and keep their own blobs.
- */
 export class DataRoomFile {
   private constructor(private state: FileState) {}
 
@@ -116,10 +112,6 @@ export class DataRoomFile {
     this.state.path = folder ? folder.path : MaterializedPath.root();
   }
 
-  /**
-   * Supersede the current content. The previous version's blob is untouched, so
-   * older revisions stay downloadable.
-   */
   addVersion(content: FileContent): number {
     assertContent(content);
     this.state.content = content;

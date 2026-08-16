@@ -37,7 +37,6 @@ export class MoveFolderHandler {
       throw new NotFoundError('Destination folder not found');
     }
 
-    // Rejects cycles and cross-room moves; returns the rewrite descendants need.
     const { from, to } = folder.moveTo(newParent);
 
     try {

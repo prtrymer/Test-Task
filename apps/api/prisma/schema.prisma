@@ -1,38 +1,12 @@
-// ---------------------------------------------------------------------------
-// Data Room — data model
-//
-// Two ideas drive this schema:
-//
-//   1. `dataRoomId` is the partition key. Every content table carries it and
-//      every composite index leads with it. No query is allowed to span data
-//      rooms. The system runs on one Postgres instance today; if that ever
-//      saturates, splitting on hash(dataRoomId) needs no remodelling.
-//
-//   2. Folders and files carry a materialised `path` of ancestor ids. One
-//      prefix scan then answers three otherwise-awkward questions: list a
-//      subtree, aggregate a subtree's size and count, and decide whether a
-//      share on an ancestor covers a given item. Paths are built from ids
-//      rather than names, so renaming is free — only moves rewrite paths.
-// ---------------------------------------------------------------------------
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL") // pooled  — application queries
-  directUrl = env("DIRECT_URL")   // direct  — migrations, studio, introspection
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
-
-// The pg_trgm extension (needed by the trigram index on files.name) is created
-// in the init migration rather than declared here. Prisma's `postgresqlExtensions`
-// preview feature diffs *every* extension in the database, which reports
-// Prisma Postgres's own built-in `prisma_postgres` extension as drift on every run.
-
-// ---------------------------------------------------------------------------
-// Identity
-// ---------------------------------------------------------------------------
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid
@@ -50,16 +24,11 @@ model User {
   @@map("users")
 }
 
-/// One row per sign-in method. Keeping credentials out of `User` lets the same
-/// person hold a password and a Google identity without nullable columns
-/// multiplying per provider — a third provider is a row, not a migration.
 model AuthIdentity {
   id             String       @id @default(uuid()) @db.Uuid
   userId         String       @db.Uuid
   provider       AuthProvider
-  /// Google's `sub`, or the normalised email for LOCAL.
   providerUserId String
-  /// Bcrypt hash. Set for LOCAL only; null for federated providers.
   passwordHash   String?
   createdAt      DateTime     @default(now())
 
@@ -74,10 +43,6 @@ enum AuthProvider {
   LOCAL
   GOOGLE
 }
-
-// ---------------------------------------------------------------------------
-// Content tree
-// ---------------------------------------------------------------------------
 
 model DataRoom {
   id        String   @id @default(uuid()) @db.Uuid

@@ -47,8 +47,6 @@ export class RegisterUserHandler {
         passwordHash,
       });
     } catch (error) {
-      // The unique index on email decides this, not a prior read — two
-      // simultaneous registrations cannot both succeed.
       if (isUniqueViolation(error)) {
         throw new ConflictError('An account with that email already exists');
       }

@@ -28,8 +28,6 @@ interface Props {
 export function DeleteDialog({ dataRoomId, entry, onClose, onDeleted }: Props) {
   const isFolder = entry?.kind === 'folder';
 
-  // Deleting a folder cascades, so the user is told what goes with it before
-  // confirming rather than after.
   const preview = useQuery({
     queryKey: ['deletion-preview', dataRoomId, entry?.id],
     queryFn: () => folders.deletionPreview(dataRoomId, entry!.id),
@@ -60,10 +58,6 @@ export function DeleteDialog({ dataRoomId, entry, onClose, onDeleted }: Props) {
     <AlertDialog open={Boolean(entry)} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          {/* Filenames have no spaces to break on, so a long one would push the
-              dialog past its max-width and drag the footer out with it.
-              Wrapping rather than truncating: you have to be able to read what
-              you are about to destroy. */}
           <AlertDialogTitle className="[overflow-wrap:anywhere]">
             Delete “{entry?.name}”?
           </AlertDialogTitle>
@@ -109,7 +103,6 @@ export function DeleteDialog({ dataRoomId, entry, onClose, onDeleted }: Props) {
           <AlertDialogCancel disabled={remove.isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={(event) => {
-              // Keep the dialog open while the request is in flight.
               event.preventDefault();
               remove.mutate();
             }}

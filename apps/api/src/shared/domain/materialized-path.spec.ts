@@ -59,9 +59,6 @@ describe('MaterializedPath', () => {
       expect(child.contains(parent)).toBe(false);
     });
 
-    // The trailing slash is what makes this safe. Without it, "/ab/" would
-    // look like it sits beneath "/a/" — which would leak a sibling folder
-    // through a share.
     it('does not mistake a sibling with a shared prefix for a descendant', () => {
       const shortId = MaterializedPath.root().append('a');
       const longerId = MaterializedPath.root().append('ab');

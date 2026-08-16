@@ -8,16 +8,10 @@ import { ShareRepositoryPort } from './ports/share.repository';
 
 export interface Caller {
   userId: string | null;
-  /** Present when the request arrived through a public share link. */
+
   linkToken?: string | null;
 }
 
-/**
- * Turns a caller and a target into a decision, by loading whatever grants
- * apply and handing them to AccessPolicy. Every read and write path goes
- * through here, so there is one answer to "may they?" rather than one per
- * controller.
- */
 @Injectable()
 export class AccessResolver {
   constructor(
@@ -41,17 +35,12 @@ export class AccessResolver {
     });
   }
 
-  /**
-   * Denies with "not found" rather than "forbidden": telling an unauthorised
-   * caller that an id exists is itself a disclosure, and lets them enumerate.
-   */
   async requireRead(caller: Caller, target: AccessTarget): Promise<AccessDecision> {
     const decision = await this.evaluate(caller, target);
     if (!decision.canRead) throw new NotFoundError('Not found');
     return decision;
   }
 
-  /** Writes are the owner's alone today, so a failure here is a true 403. */
   async requireWrite(caller: Caller, target: AccessTarget): Promise<AccessDecision> {
     const decision = await this.evaluate(caller, target);
     if (!decision.canRead) throw new NotFoundError('Not found');
@@ -70,7 +59,7 @@ export class AccessResolver {
 
     if (caller.linkToken) {
       const linkShare = await this.shares.findActiveByToken(caller.linkToken);
-      // A token for another room is simply not a grant here.
+
       if (linkShare && linkShare.dataRoomId === dataRoomId) {
         grants.push(linkShare);
       }

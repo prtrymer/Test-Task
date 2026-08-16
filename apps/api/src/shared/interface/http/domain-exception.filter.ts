@@ -21,12 +21,6 @@ interface ErrorBody {
   error: { code: string; message: string };
 }
 
-/**
- * The one place errors become HTTP. Catching everything — not just DomainError
- * — means the client always receives the same envelope, so it never has to
- * guess at a response shape it did not expect. Keeping the mapping here is also
- * what lets the domain and application layers stay free of Nest imports.
- */
 @Catch()
 export class DomainExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(DomainExceptionFilter.name);
@@ -49,21 +43,16 @@ export class DomainExceptionFilter implements ExceptionFilter {
       };
     }
 
-    // Nest's own pipes and guards answer before the handler runs; their
-    // messages are safe to pass through and are usually the most specific
-    // thing the caller can be told.
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const payload = exception.getResponse();
       const message =
         typeof payload === 'string'
           ? payload
-          : this.firstMessage(payload) ?? exception.message;
+          : (this.firstMessage(payload) ?? exception.message);
       return { status, body: { error: { code: codeForStatus(status), message } } };
     }
 
-    // Anything else is a bug or an upstream failure. Log it in full; tell the
-    // caller nothing about its internals.
     this.logger.error(
       `Unhandled ${exception instanceof Error ? exception.name : typeof exception}`,
       exception instanceof Error ? exception.stack : String(exception),
@@ -80,7 +69,6 @@ export class DomainExceptionFilter implements ExceptionFilter {
     };
   }
 
-  /** ValidationPipe returns `{ message: string[] }`; surface the first entry. */
   private firstMessage(payload: object): string | undefined {
     const message = (payload as { message?: unknown }).message;
     if (Array.isArray(message)) return message[0] as string;

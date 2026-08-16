@@ -14,13 +14,13 @@ export interface UploadItem {
   status: UploadStatus;
   percent: number;
   error?: string;
-  /** True when the commit turned this into a new version of an existing file. */
+
   versioned?: boolean;
 }
 
 const ACCEPTED_TYPE = 'application/pdf';
 const MAX_BYTES = 100 * 1024 * 1024;
-/** Enough to keep the pipe busy without opening a connection per dropped file. */
+
 const CONCURRENCY = 3;
 
 interface Options {
@@ -29,11 +29,6 @@ interface Options {
   onCommitted: () => void;
 }
 
-/**
- * Runs the three-step upload per file: authorise and get a ticket, PUT the
- * bytes straight to storage, then commit the row. Progress belongs to step two,
- * which is why it is reported from XHR rather than inferred.
- */
 export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
   const [items, setItems] = useState<UploadItem[]>([]);
   const counter = useRef(0);
@@ -89,7 +84,6 @@ export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
         const id = `upload-${counter.current++}`;
         const base = { id, name: file.name, sizeBytes: file.size, percent: 0 };
 
-        // Rejected up front, so the user is not left watching a doomed transfer.
         if (file.type !== ACCEPTED_TYPE) {
           rejected.push({
             ...base,
@@ -110,8 +104,6 @@ export function useUploads({ dataRoomId, folderId, onCommitted }: Options) {
 
       setItems((current) => [...rejected, ...current]);
 
-      // A small worker pool rather than Promise.all, so dropping fifty files
-      // does not open fifty simultaneous transfers.
       const queue = [...accepted];
       const workers = Array.from(
         { length: Math.min(CONCURRENCY, queue.length) },

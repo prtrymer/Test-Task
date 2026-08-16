@@ -1,6 +1,5 @@
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-/** Sizes arrive as strings because they are BigInt server-side. */
 export function formatBytes(value: string | number | bigint): string {
   const bytes = Number(value);
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -30,7 +29,6 @@ export function formatDate(iso: string): string {
   });
 }
 
-/** "3 folders and 12 files" — used in the delete warning. */
 export function describeContents(folderCount: number, fileCount: number): string {
   const parts: string[] = [];
   if (folderCount) parts.push(`${folderCount} folder${folderCount === 1 ? '' : 's'}`);

@@ -7,11 +7,6 @@ interface Props {
   onRetry?: () => void;
 }
 
-/**
- * The API answers 404 for anything the caller may not see, so a deleted item
- * and a revoked share look identical here. That is deliberate — but it means
- * the copy has to cover both without guessing which happened.
- */
 export function ErrorState({ error, onRetry }: Props) {
   const gone = isApiError(error) && error.isGone;
 

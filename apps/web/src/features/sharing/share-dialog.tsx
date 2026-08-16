@@ -299,7 +299,6 @@ async function copyShareLink(token: string): Promise<boolean> {
     toast.success('Link copied to clipboard');
     return true;
   } catch {
-    // Clipboard access can be denied; showing the URL still lets them copy it.
     toast.info(url, { duration: 10_000, description: 'Copy this link' });
     return false;
   }

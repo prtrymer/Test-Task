@@ -11,11 +11,6 @@ import { FileViewer } from '@/features/files/file-viewer';
 import { api } from '@/lib/api/client';
 import type { ResolvedShareLink } from '@/lib/api/types';
 
-/**
- * The public-link surface. No sign-in required: the token in this URL is the
- * credential, and it travels to the API in the X-Share-Token header rather than
- * a query string, so it stays out of access logs and Referer headers.
- */
 export default function PublicSharePage({
   params,
 }: {
@@ -23,8 +18,6 @@ export default function PublicSharePage({
 }) {
   const { token } = use(params);
 
-  // The token resolves server-side; the client only learns what it opens by
-  // asking. Anything it may not see comes back as 404.
   const resolved = useQuery({
     queryKey: ['public-share', token],
     queryFn: () =>

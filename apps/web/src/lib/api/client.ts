@@ -5,11 +5,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 interface RequestOptions {
   body?: unknown;
-  /**
-   * Public share link token. Sent as a header rather than a query parameter —
-   * it is the only thing protecting the shared content, and query strings end
-   * up in access logs, browser history and Referer.
-   */
+
   shareToken?: string | null;
   signal?: AbortSignal;
 }
@@ -61,7 +57,6 @@ function safeParse(text: string): { error?: { code?: string; message?: string } 
   }
 }
 
-/** Nest's built-in pipes answer before our filter, so those need a fallback. */
 function messageForStatus(status: number): string {
   if (status === 400) return 'That request was not valid';
   if (status === 401) return 'Please sign in again';

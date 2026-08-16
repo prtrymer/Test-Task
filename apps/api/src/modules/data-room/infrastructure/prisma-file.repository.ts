@@ -47,10 +47,6 @@ export class PrismaFileRepository extends FileRepositoryPort {
     await this.prisma.file.update({ where: { id }, data: rest });
   }
 
-  /**
-   * The new current content and its history row are written together — a
-   * version that exists in one and not the other would misreport the file.
-   */
   async appendVersion(file: DataRoomFile, uploadedById: string): Promise<void> {
     const snapshot = file.toSnapshot();
     await this.prisma.$transaction([

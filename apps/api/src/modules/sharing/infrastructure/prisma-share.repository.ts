@@ -7,7 +7,6 @@ import {
   SharedRoomSummary,
 } from '../application/ports/share.repository';
 
-/** Shape returned by every query here: the row plus its folder's path. */
 type ShareRow = {
   id: string;
   dataRoomId: string;
@@ -40,11 +39,6 @@ export class PrismaShareRepository extends ShareRepositoryPort {
     return row ? toDomain(row) : null;
   }
 
-  /**
-   * Revoked grants are filtered here because the partial index makes that
-   * cheap. Expiry is left to the domain, so there is one authority on whether
-   * a share is live.
-   */
   async findActiveForUser(userId: string, dataRoomId: string): Promise<Share[]> {
     const rows = await this.prisma.share.findMany({
       where: { granteeUserId: userId, dataRoomId, revokedAt: null },
@@ -133,7 +127,6 @@ function toDomain(row: ShareRow): Share {
 function toSubject(row: ShareRow): ShareSubject {
   switch (row.subjectType) {
     case 'FOLDER':
-      // The CHECK constraint guarantees the id; the join guarantees the path.
       return {
         type: 'FOLDER',
         folderId: row.subjectFolderId as string,

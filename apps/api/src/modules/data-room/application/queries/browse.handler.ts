@@ -15,7 +15,6 @@ import { FolderRepositoryPort } from '../ports/folder.repository';
 export const MAX_PAGE_SIZE = 100;
 export const DEFAULT_PAGE_SIZE = 50;
 
-/** Read-side entry point: listing, breadcrumbs, subtree totals and search. */
 @Injectable()
 export class BrowseHandler {
   constructor(
@@ -64,10 +63,6 @@ export class BrowseHandler {
     return this.queries.subtreeStats(dataRoomId, folder.path.value);
   }
 
-  /**
-   * Search is scoped to what the caller may see: a recipient holding only a
-   * folder share searches that subtree, never the whole room.
-   */
   async search(
     caller: Caller,
     input: {
@@ -103,7 +98,6 @@ export class BrowseHandler {
     });
   }
 
-  /** Authorises the folder itself when given, the room otherwise. */
   private async authoriseFolder(
     caller: Caller,
     dataRoomId: string,

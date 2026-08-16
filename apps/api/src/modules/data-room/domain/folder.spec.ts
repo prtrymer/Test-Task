@@ -103,7 +103,6 @@ describe('Folder', () => {
       expect(child.parentId).toBeNull();
     });
 
-    // Without this the subtree would be detached from the tree entirely.
     it('refuses to move a folder into its own descendant', () => {
       const { root, grandchild } = makeTree();
       expect(() => root.moveTo(grandchild)).toThrow(ConflictError);

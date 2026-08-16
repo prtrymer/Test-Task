@@ -1,7 +1,3 @@
-/**
- * Query keys as a single hierarchy, so invalidating a data room reaches every
- * listing beneath it without each mutation having to enumerate them.
- */
 export const keys = {
   session: ['session'] as const,
 

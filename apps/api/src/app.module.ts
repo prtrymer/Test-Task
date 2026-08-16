@@ -21,7 +21,6 @@ import { StorageModule } from './modules/storage/storage.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    // Runs on every route: identifies the caller without authorising them.
     consumer.apply(CallerMiddleware).forRoutes('*');
   }
 }

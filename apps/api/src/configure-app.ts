@@ -1,14 +1,9 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DomainExceptionFilter } from './shared/interface/http/domain-exception.filter';
 
-/**
- * Shared by the local server and the serverless entry point, so the two cannot
- * drift — a pipe or filter missing only in production is the kind of bug that
- * surfaces as a security hole rather than a crash.
- */
 export function configureApp(app: INestApplication): void {
   app.enableCors({
-    origin: parseOrigins(process.env.CORS_ORIGIN),
+    origin: buildOriginCheck(process.env.CORS_ORIGIN),
     credentials: true,
   });
 
@@ -23,13 +18,29 @@ export function configureApp(app: INestApplication): void {
   app.useGlobalFilters(new DomainExceptionFilter());
 }
 
-/**
- * Comma-separated list. The deployed frontend URL is not known until it has
- * been deployed once, so this is set after the first frontend deploy.
- */
-function parseOrigins(raw: string | undefined): string[] {
-  return (raw ?? 'http://localhost:3000')
+type OriginCheck = (
+  origin: string | undefined,
+  callback: (error: Error | null, allow?: boolean) => void,
+) => void;
+
+function buildOriginCheck(raw: string | undefined): OriginCheck {
+  const patterns = (raw ?? 'http://localhost:3000')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
+
+  const exact = new Set(patterns.filter((p) => !p.includes('*')));
+  const wildcards = patterns
+    .filter((p) => p.includes('*'))
+    .map((p) => new RegExp(`^${p.split('*').map(escapeRegExp).join('[^.]*')}$`));
+
+  return (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const allowed = exact.has(origin) || wildcards.some((re) => re.test(origin));
+    return callback(null, allowed);
+  };
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

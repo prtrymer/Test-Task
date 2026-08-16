@@ -9,13 +9,6 @@ import {
 
 const UPLOAD_WINDOW_SECONDS = 60 * 30;
 
-/**
- * Vercel Blob, against a private store.
- *
- * Both directions are presigned so bytes never traverse a Vercel Function,
- * which caps request and response bodies at 4.5 MB. Authorisation happens when
- * the URL is minted; the CDN enforces the scope thereafter.
- */
 @Injectable()
 export class VercelBlobStorage extends StoragePort {
   private readonly logger = new Logger(VercelBlobStorage.name);
@@ -49,11 +42,9 @@ export class VercelBlobStorage extends StoragePort {
       validUntil,
       allowedContentTypes: [input.contentType],
       maximumSizeInBytes: input.maxSizeBytes,
-      // Pathnames are unique per version, so an overwrite would be a bug.
+
       allowOverwrite: false,
-      // Without this the store appends its own random suffix to the object key,
-      // and the commit step's head() lookup on the requested pathname misses.
-      // The pathname already carries a generated id, so it is unique already.
+
       addRandomSuffix: false,
     });
 

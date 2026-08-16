@@ -192,7 +192,7 @@ export function Browser({
           onChange={(event) => {
             const selected = Array.from(event.target.files ?? []);
             if (selected.length) uploads.enqueue(selected);
-            // Reset so re-picking the same file fires change again.
+
             event.target.value = '';
           }}
         />

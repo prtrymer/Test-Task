@@ -1,6 +1,5 @@
 import { ValidationError } from './domain-error';
 
-/** A user-supplied folder or file name. */
 export class ResourceName {
   static readonly MAX_LENGTH = 255;
 
@@ -30,10 +29,6 @@ export class ResourceName {
     return new ResourceName(trimmed);
   }
 
-  /**
-   * `report.pdf` → `report (2).pdf`. Used when resolving a rename collision;
-   * uploads take the versioning path instead.
-   */
   withSuffix(n: number): ResourceName {
     const dot = this.value.lastIndexOf('.');
     const hasExtension = dot > 0;

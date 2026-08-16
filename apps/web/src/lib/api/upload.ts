@@ -3,17 +3,10 @@ import { ApiError } from './errors';
 export interface UploadProgress {
   loaded: number;
   total: number;
-  /** 0–100, clamped. */
+
   percent: number;
 }
 
-/**
- * Sends bytes straight to blob storage using the presigned URL.
- *
- * XHR rather than fetch: fetch still has no upload progress event, and per-file
- * progress is a stated requirement. This is also why the bytes never touch the
- * API — Vercel functions cap bodies at 4.5 MB.
- */
 export function uploadToStorage(input: {
   url: string;
   file: File;

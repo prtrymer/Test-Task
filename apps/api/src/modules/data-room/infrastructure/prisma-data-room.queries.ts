@@ -11,7 +11,6 @@ import {
   SubtreeStats,
 } from '../application/ports/data-room.queries';
 
-/** Keyset position. Folders sort before files, hence the group ordinal. */
 interface Cursor {
   g: number;
   k: string;
@@ -29,7 +28,6 @@ function decodeCursor(raw: string | null): Cursor | null {
     if (typeof parsed?.g !== 'number' || typeof parsed?.k !== 'string') return null;
     return { g: parsed.g, k: parsed.k, i: String(parsed.i ?? '') };
   } catch {
-    // A malformed cursor restarts the listing rather than failing the request.
     return null;
   }
 }
@@ -62,8 +60,6 @@ export class PrismaDataRoomQueries extends DataRoomQueriesPort {
     const { dataRoomId, folderId, limit, sort } = input;
     const cursor = decodeCursor(input.cursor);
 
-    // The sort key is materialised into the union so one comparison serves
-    // both branches, whichever column the caller ordered by.
     const sortKey =
       sort === 'updatedAt'
         ? Prisma.sql`to_char("updatedAt" AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS')`
@@ -71,7 +67,6 @@ export class PrismaDataRoomQueries extends DataRoomQueriesPort {
 
     const folderMatch = folderId ? Prisma.sql`= ${folderId}::uuid` : Prisma.sql`IS NULL`;
 
-    // Fetch one extra row to learn whether another page exists.
     const take = limit + 1;
 
     const rows = await this.prisma.$queryRaw<DirectoryRow[]>`
@@ -125,7 +120,6 @@ export class PrismaDataRoomQueries extends DataRoomQueriesPort {
       select: { id: true, name: true },
     });
 
-    // Restore the path's order, which `IN` does not preserve.
     const byId = new Map(rows.map((row) => [row.id, row.name]));
     return ancestorIds
       .filter((id) => byId.has(id))
@@ -172,7 +166,6 @@ export class PrismaDataRoomQueries extends DataRoomQueriesPort {
     const cursor = decodeCursor(input.cursor);
     const take = limit + 1;
 
-    // ILIKE '%term%' is served by the trigram GIN index on files.name.
     const rows = await this.prisma.$queryRaw<DirectoryRow[]>`
       SELECT 1 AS sort_group, 'file' AS kind, "id", "name", "updatedAt",
              "sizeBytes", "contentType", "versionNumber", "name" AS sort_key

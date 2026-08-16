@@ -2,10 +2,6 @@ import { DirectoryEntry, SubtreeStats } from '../../application/ports/data-room.
 import { DataRoomFile } from '../../domain/file';
 import { Folder } from '../../domain/folder';
 
-/**
- * Byte counts cross the wire as strings. JSON has no integer type wide enough
- * for a BigInt, and `JSON.stringify` throws on one rather than truncating.
- */
 export const asBytes = (value: bigint): string => value.toString();
 
 export const presentFolder = (folder: Folder) => ({

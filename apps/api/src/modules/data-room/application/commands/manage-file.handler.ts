@@ -7,7 +7,6 @@ import { DataRoomFile } from '../../domain/file';
 import { FileRepositoryPort } from '../ports/file.repository';
 import { FolderRepositoryPort } from '../ports/folder.repository';
 
-/** Rename, move and delete for a single file. */
 @Injectable()
 export class ManageFileHandler {
   private readonly logger = new Logger(ManageFileHandler.name);
@@ -29,9 +28,6 @@ export class ManageFileHandler {
     try {
       await this.files.update(file);
     } catch (error) {
-      // Uploads resolve a name clash by versioning; a rename cannot, because
-      // the two files have separate histories. Surfacing the conflict lets the
-      // UI offer a suffixed alternative.
       if (isUniqueViolation(error)) {
         throw new ConflictError(
           `A file named "${file.name.value}" already exists in this folder`,
@@ -79,7 +75,6 @@ export class ManageFileHandler {
   ): Promise<void> {
     await this.load(caller, input.dataRoomId, input.fileId);
 
-    // Every version's blob, not just the current one.
     const blobs = await this.files.listBlobPathnames(input.dataRoomId, input.fileId);
     await this.files.delete(input.dataRoomId, input.fileId);
 

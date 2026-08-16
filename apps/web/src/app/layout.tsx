@@ -4,8 +4,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/lib/query/provider';
 import './globals.css';
 
-// globals.css maps Tailwind's font tokens onto these variables, so they have to
-// be defined on the root element or everything falls back to serif.
 const sans = Geist({ variable: '--font-sans', subsets: ['latin'] });
 const mono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 

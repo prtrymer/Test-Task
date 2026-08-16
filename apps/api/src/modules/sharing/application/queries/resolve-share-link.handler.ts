@@ -12,14 +12,6 @@ export interface ResolvedShareLink {
   subjectFileId: string | null;
 }
 
-/**
- * Turns a public link token into the thing it opens, so an anonymous visitor
- * knows what to render before making any scoped request.
- *
- * This is the only endpoint that accepts a bare token with no session, so it
- * returns the minimum needed to bootstrap the view — never the owner's identity
- * or anything outside the shared subject.
- */
 @Injectable()
 export class ResolveShareLinkHandler {
   constructor(
@@ -32,7 +24,7 @@ export class ResolveShareLinkHandler {
     if (!token) throw new NotFoundError('This link is not valid');
 
     const share = await this.shares.findActiveByToken(token);
-    // Expiry is the domain's call; the repository only filters revocation.
+
     if (!share || !share.isActive(this.clock.now())) {
       throw new NotFoundError('This link is no longer valid');
     }

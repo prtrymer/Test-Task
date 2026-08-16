@@ -76,7 +76,6 @@ export class DataRoomsController {
     await this.rooms.remove(caller, id);
   }
 
-  /** Contents of the room root, or of `folderId` when given. */
   @Get(':id/entries')
   async entries(
     @CurrentCaller() caller: Caller,

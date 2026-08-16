@@ -46,11 +46,6 @@ export function TopBar({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-56">
-          {/* The group is required, not decorative: DropdownMenuLabel maps to
-              Base UI's GroupLabel, which reads MenuGroupContext and throws if
-              it is rendered outside a group — taking the whole page down with
-              it. It also reads correctly here, labelling the account whose
-              session the item below ends. */}
           <DropdownMenuGroup>
             <DropdownMenuLabel className="font-normal">
               <span className="block truncate text-sm font-medium">

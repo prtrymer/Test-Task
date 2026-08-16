@@ -13,11 +13,6 @@ interface Props {
   onClearFinished: () => void;
 }
 
-/**
- * Drive's floating transfer panel: uploads keep running while you navigate, so
- * their progress belongs in a persistent corner rather than inline in a list
- * that changes as you move between folders.
- */
 export function UploadPanel({ items, onDismiss, onClearFinished }: Props) {
   const [collapsed, setCollapsed] = useState(false);
 

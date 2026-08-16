@@ -17,13 +17,6 @@ export interface FileUrl {
   sizeBytes: bigint;
 }
 
-/**
- * Issues a short-lived URL the browser fetches directly from storage.
- *
- * The TTL is deliberately small. Revoking a share cannot invalidate a signed
- * URL that has already been handed out, so the window during which a revoked
- * viewer can still read the bytes is exactly this number.
- */
 const READ_URL_TTL_SECONDS = 300;
 
 @Injectable()

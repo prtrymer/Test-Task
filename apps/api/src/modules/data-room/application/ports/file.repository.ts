@@ -3,7 +3,6 @@ import { DataRoomFile } from '../../domain/file';
 export abstract class FileRepositoryPort {
   abstract findById(dataRoomId: string, id: string): Promise<DataRoomFile | null>;
 
-  /** Drives conflict resolution on upload: same name in the same folder. */
   abstract findByName(
     dataRoomId: string,
     folderId: string | null,
@@ -14,7 +13,6 @@ export abstract class FileRepositoryPort {
 
   abstract update(file: DataRoomFile): Promise<void>;
 
-  /** Persists the new current content and appends the version row atomically. */
   abstract appendVersion(file: DataRoomFile, uploadedById: string): Promise<void>;
 
   abstract delete(dataRoomId: string, id: string): Promise<void>;

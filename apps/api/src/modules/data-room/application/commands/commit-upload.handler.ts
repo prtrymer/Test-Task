@@ -16,18 +16,10 @@ export interface CommitUploadCommand {
 
 export interface CommitUploadResult {
   file: DataRoomFile;
-  /** True when an existing file gained a version instead of a new row appearing. */
+
   versioned: boolean;
 }
 
-/**
- * Step two: the browser reports its upload finished, and the file becomes real.
- *
- * A same-name upload into the same folder appends a version rather than
- * failing or silently overwriting — the unique constraint on (folderId, name)
- * makes "one logical file per name" a database guarantee, and versioning is
- * how a conflict resolves.
- */
 @Injectable()
 export class CommitUploadHandler {
   constructor(
@@ -50,9 +42,6 @@ export class CommitUploadHandler {
     const uploaderId = caller.userId;
     if (!uploaderId) throw new ValidationError('Uploads require a signed-in user');
 
-    // The blob is the source of truth for size and type. A client that
-    // misreports either — or claims an upload that never happened — is caught
-    // here rather than being written into the listing.
     const stored = await this.storage.head(command.blobPathname);
     if (!stored) {
       throw new ValidationError('The upload did not complete');

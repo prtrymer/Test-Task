@@ -1,7 +1,3 @@
-/**
- * Prisma's unique-constraint error, recognised without importing Prisma types
- * into the application layer.
- */
 export function isUniqueViolation(error: unknown): boolean {
   return (
     typeof error === 'object' &&

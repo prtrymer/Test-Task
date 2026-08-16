@@ -71,7 +71,6 @@ export class FoldersController {
     return presentFolder(folder);
   }
 
-  /** What a delete would remove — shown before the confirmation prompt. */
   @Get(':folderId/deletion-preview')
   async preview(
     @CurrentCaller() caller: Caller,

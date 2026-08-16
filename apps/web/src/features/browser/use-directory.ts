@@ -12,10 +12,6 @@ export interface BrowseScope {
   shareToken?: string | null;
 }
 
-/**
- * Paginated directory listing. Pages are keyset-based on the server, so the
- * cursor is opaque here — we only ever hand back what the last page returned.
- */
 export function useDirectory(scope: BrowseScope, sort: 'name' | 'updatedAt' = 'name') {
   const query = useInfiniteQuery({
     queryKey: keys.entries(scope.dataRoomId, scope.folderId, sort),
@@ -45,12 +41,6 @@ export function useBreadcrumbs(scope: BrowseScope) {
   });
 }
 
-/**
- * Every mutation in the browser invalidates the same way: drop everything under
- * this data room. Listings, breadcrumbs and subtree totals can all be affected
- * by a single move or delete, and enumerating them per mutation is how stale
- * views creep in.
- */
 export function useRefreshRoom(dataRoomId: string) {
   const queryClient = useQueryClient();
   return useCallback(

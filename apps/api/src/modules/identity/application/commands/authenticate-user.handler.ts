@@ -23,8 +23,6 @@ export class AuthenticateUserHandler {
     const email = command.email.trim().toLowerCase();
     const identity = await this.users.findIdentity('LOCAL', email);
 
-    // One message and one shape for every failure, so the response cannot be
-    // used to tell "no such account" from "wrong password".
     if (!identity?.passwordHash) {
       await this.hasher.verify(command.password, DUMMY_HASH);
       throw new UnauthorizedError('Email or password is incorrect');
@@ -42,8 +40,4 @@ export class AuthenticateUserHandler {
   }
 }
 
-/**
- * Compared against when no account matches, so a missing account costs the same
- * time as a wrong password and the difference is not observable.
- */
 const DUMMY_HASH = '$2a$12$C6UzMDM.H6dfI/f/IKcEe.WQ8sYJ8VfBiVzZ0Zq5oZ5.6cKk8mJ5S';

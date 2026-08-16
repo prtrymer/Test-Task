@@ -26,7 +26,6 @@ export class RenameFolderHandler {
       path: folder.path,
     });
 
-    // Paths are built from ids, so this touches one row — no subtree rewrite.
     folder.rename(input.name);
 
     try {

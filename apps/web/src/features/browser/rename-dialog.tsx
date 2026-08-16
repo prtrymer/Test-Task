@@ -29,9 +29,6 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
   const [name, setName] = useState('');
   const [seededFor, setSeededFor] = useState<string | null>(null);
 
-  // Seeding during render rather than in an effect: React re-runs this component
-  // before committing, so the input is correct on first paint instead of
-  // flashing the previous entry's name.
   if (entry && entry.id !== seededFor) {
     setSeededFor(entry.id);
     setName(entry.name);
@@ -70,11 +67,7 @@ export function RenameDialog({ dataRoomId, entry, onClose, onRenamed }: Props) {
             <DialogTitle>
               Rename {entry?.kind === 'folder' ? 'folder' : 'file'}
             </DialogTitle>
-            <DialogDescription>
-              {/* Uploads resolve a clash by versioning; a rename cannot, because
-                  the two files have separate histories. */}
-              Names must be unique within a folder.
-            </DialogDescription>
+            <DialogDescription>Names must be unique within a folder.</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2 py-4">

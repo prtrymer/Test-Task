@@ -34,7 +34,6 @@ export interface EntryHandlers {
   onDelete: (entry: DirectoryEntry) => void;
 }
 
-/** The action list, shared by the right-click menu and the row's ⋮ button. */
 function items(entry: DirectoryEntry, handlers: EntryHandlers) {
   return [
     entry.kind === 'file'
@@ -46,13 +45,6 @@ function items(entry: DirectoryEntry, handlers: EntryHandlers) {
   ];
 }
 
-/**
- * Right-clicking a row opens the same actions, as Drive does.
- *
- * `render` receives the element the trigger should *become* — a `<li>` here —
- * rather than wrapping one. Wrapping would put a `<div>` between `<ul>` and its
- * items, which is invalid HTML and takes the rows out of the grid's flow.
- */
 export function EntryContextMenu({
   entry,
   handlers,

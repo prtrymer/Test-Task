@@ -10,11 +10,6 @@ export interface FolderState {
   path: MaterializedPath;
 }
 
-/**
- * A node in a data room's tree. `path` includes this folder's own id, so a
- * folder contains itself under `contains()` — descendants are found with
- * `strictlyContains()`.
- */
 export class Folder {
   private constructor(private state: FolderState) {}
 
@@ -39,7 +34,6 @@ export class Folder {
     });
   }
 
-  /** Rehydrate from persistence without re-running creation rules. */
   static rehydrate(state: {
     id: string;
     dataRoomId: string;
@@ -84,11 +78,6 @@ export class Folder {
     this.state.name = ResourceName.create(newName);
   }
 
-  /**
-   * Moving a folder under its own descendant would detach that subtree from the
-   * tree and orphan it, so it is rejected here rather than left to the database.
-   * Returns the path rewrite descendants must apply.
-   */
   moveTo(newParent: Folder | null): { from: MaterializedPath; to: MaterializedPath } {
     const newParentPath = newParent ? newParent.path : MaterializedPath.root();
 

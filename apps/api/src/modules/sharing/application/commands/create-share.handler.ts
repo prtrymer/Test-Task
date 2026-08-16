@@ -19,7 +19,7 @@ export interface CreateShareCommand {
   subjectFolderId?: string | null;
   subjectFileId?: string | null;
   mode: 'PUBLIC_LINK' | 'RESTRICTED';
-  /** Required for RESTRICTED. The recipient must already have an account. */
+
   granteeEmail?: string | null;
   expiresAt?: Date | null;
 }
@@ -38,7 +38,6 @@ export class CreateShareHandler {
   async execute(caller: Caller, command: CreateShareCommand): Promise<Share> {
     if (!caller.userId) throw new ValidationError('Sharing requires a signed-in user');
 
-    // Only someone who can write the room may hand out access to it.
     await this.access.requireWrite(caller, {
       kind: 'DATA_ROOM',
       dataRoomId: command.dataRoomId,
@@ -67,7 +66,6 @@ export class CreateShareHandler {
       command.granteeEmail.trim().toLowerCase(),
     );
     if (!grantee) {
-      // Deliberately explicit: the owner needs to know why nothing happened.
       throw new NotFoundError(`No account exists for ${command.granteeEmail}`);
     }
 
@@ -83,8 +81,6 @@ export class CreateShareHandler {
     try {
       await this.shares.insert(share);
     } catch (error) {
-      // The partial unique index on active grants is what makes this a race-free
-      // check rather than a read-then-write.
       if (isUniqueViolation(error)) {
         throw new ConflictError('That person already has access to this item');
       }
@@ -94,7 +90,6 @@ export class CreateShareHandler {
     return share;
   }
 
-  /** Confirms the subject exists in this room and resolves a folder's path. */
   private async resolveSubject(command: CreateShareCommand): Promise<ShareSubject> {
     switch (command.subjectType) {
       case 'DATA_ROOM':

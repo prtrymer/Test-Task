@@ -12,11 +12,6 @@ import { shares } from '@/lib/api/resources';
 import { keys } from '@/lib/query/keys';
 import { Inbox } from 'lucide-react';
 
-/**
- * A recipient's view of one grant. The browser is rooted at whatever was
- * shared, so navigating "up" stops there rather than exposing the ancestors
- * the grant does not cover.
- */
 export default function SharedItemPage({
   params,
 }: {
@@ -36,8 +31,6 @@ export default function SharedItemPage({
 
   const grant = list.data.items.find((item) => item.shareId === shareId);
 
-  // The grant vanished between the list and this page — revoked, or the item
-  // was deleted. Same message either way, because the API does not distinguish.
   if (!grant) {
     return (
       <div className="p-6">

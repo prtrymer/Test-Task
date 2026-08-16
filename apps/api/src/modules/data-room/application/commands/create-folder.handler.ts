@@ -44,8 +44,6 @@ export class CreateFolderHandler {
     try {
       await this.folders.insert(folder);
     } catch (error) {
-      // The database owns sibling-name uniqueness, so a duplicate surfaces
-      // here rather than through a check-then-insert race.
       if (isUniqueViolation(error)) {
         throw new ConflictError(
           `A folder named "${folder.name.value}" already exists here`,

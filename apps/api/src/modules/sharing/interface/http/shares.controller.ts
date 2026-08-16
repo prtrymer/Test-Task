@@ -52,8 +52,7 @@ const present = (share: Share) => ({
   mode: share.mode,
   role: share.role,
   granteeUserId: share.granteeUserId,
-  // The token is the link's only secret, so it is returned to the owner who
-  // created it and never listed back to anyone else.
+
   token: share.token,
   expiresAt: share.expiresAt?.toISOString() ?? null,
   revokedAt: share.revokedAt?.toISOString() ?? null,
@@ -68,10 +67,6 @@ export class SharesController {
     private readonly shares: ShareRepositoryPort,
   ) {}
 
-  /**
-   * The only unauthenticated route: turns a public link token into the room it
-   * opens, so an anonymous visitor can bootstrap the view.
-   */
   @Get('share-links/resolve')
   async resolve(@CurrentCaller() caller: Caller) {
     return this.resolveLink.execute(caller.linkToken ?? null);
@@ -96,7 +91,6 @@ export class SharesController {
     return present(share);
   }
 
-  /** The owner's "who can see this" panel. */
   @Get('data-rooms/:dataRoomId/shares')
   @UseGuards(AuthenticatedGuard)
   async list(

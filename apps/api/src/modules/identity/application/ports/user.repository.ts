@@ -22,7 +22,6 @@ export abstract class UserRepositoryPort {
     providerUserId: string,
   ): Promise<IdentityRecord | null>;
 
-  /** Creates the user and its first identity together. */
   abstract createWithIdentity(input: {
     id: string;
     email: string;
@@ -32,7 +31,6 @@ export abstract class UserRepositoryPort {
     passwordHash: string | null;
   }): Promise<UserRecord>;
 
-  /** Links an additional sign-in method to an existing user. */
   abstract addIdentity(input: {
     userId: string;
     provider: AuthProvider;

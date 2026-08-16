@@ -32,14 +32,11 @@ export class JwtTokenIssuer extends TokenIssuerPort {
       const payload = await this.jwt.verifyAsync<{ sub: string; email: string }>(token);
       return { userId: payload.sub, email: payload.email };
     } catch {
-      // Expired, tampered with, or signed by a different secret — all the same
-      // to a caller: not authenticated.
       return null;
     }
   }
 }
 
-/** Accepts `900`, `15m`, `2h`, `7d`. */
 function parseTtl(raw: string): number {
   const match = /^(\d+)([smhd])?$/.exec(raw.trim());
   if (!match) return 900;

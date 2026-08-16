@@ -17,11 +17,6 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 
-  /**
-   * The API answers 404 for anything the caller may not see, so a disappeared
-   * item and a revoked share are indistinguishable here by design — both mean
-   * "this is no longer yours to view".
-   */
   get isGone(): boolean {
     return this.status === 404;
   }

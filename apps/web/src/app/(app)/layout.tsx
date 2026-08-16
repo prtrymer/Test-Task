@@ -30,8 +30,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen flex-col overflow-hidden">
       <TopBar user={user} onSignOut={signOut} />
       <div className="flex min-h-0 flex-1">
-        {/* The create action is injected per-page, because what "New" means
-            depends on whether you are looking at rooms or inside one. */}
         <Sidebar />
         <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
       </div>

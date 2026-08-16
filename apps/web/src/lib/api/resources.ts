@@ -19,7 +19,6 @@ import type {
   User,
 } from './types';
 
-/** Every call takes an optional share token so read paths work for link holders. */
 export interface Scoped {
   shareToken?: string | null;
 }
@@ -95,7 +94,6 @@ export const folders = {
       newParentId,
     }),
 
-  /** What a delete would remove — shown before the confirmation prompt. */
   deletionPreview: (dataRoomId: string, folderId: string) =>
     api.get<SubtreeStats>(
       `/data-rooms/${dataRoomId}/folders/${folderId}/deletion-preview`,

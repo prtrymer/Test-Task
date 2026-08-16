@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-/** Keeps search from firing a request per keystroke. */
 export function useDebounced<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);
 

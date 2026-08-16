@@ -4,16 +4,11 @@ import { MaterializedPath } from '../../../shared/domain/materialized-path';
 export type ShareMode = 'PUBLIC_LINK' | 'RESTRICTED';
 export type ShareRole = 'VIEWER';
 
-/**
- * What a share points at. A FOLDER subject carries the folder's resolved path,
- * because coverage of nested content is a prefix test on that path.
- */
 export type ShareSubject =
   | { type: 'DATA_ROOM' }
   | { type: 'FOLDER'; folderId: string; path: MaterializedPath }
   | { type: 'FILE'; fileId: string };
 
-/** What a caller is trying to reach. */
 export type AccessTarget =
   | { kind: 'DATA_ROOM'; dataRoomId: string }
   | { kind: 'FOLDER'; dataRoomId: string; folderId: string; path: MaterializedPath }
@@ -142,11 +137,6 @@ export class Share {
     this.state.revokedAt = now;
   }
 
-  /**
-   * Whether this share grants sight of `target`. A data room share covers the
-   * whole room; a folder share covers that folder and everything beneath it;
-   * a file share covers exactly one file.
-   */
   covers(target: AccessTarget, now: Date): boolean {
     if (!this.isActive(now)) return false;
     if (target.dataRoomId !== this.state.dataRoomId) return false;

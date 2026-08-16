@@ -15,14 +15,6 @@ interface Props {
   onClose: () => void;
 }
 
-/**
- * Renders the PDF from a short-lived signed URL pointing straight at storage.
- * The bytes never pass through the API, which both avoids the 4.5 MB function
- * response cap and keeps large documents off the server's critical path.
- *
- * The URL is fetched per open rather than cached, so a viewer whose access was
- * revoked between openings is refused at the point they ask for a new one.
- */
 export function FileViewer({ dataRoomId, fileId, fileName, shareToken, onClose }: Props) {
   const file = useQuery({
     queryKey: ['file-url', dataRoomId, fileId],

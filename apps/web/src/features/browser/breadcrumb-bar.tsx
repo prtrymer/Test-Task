@@ -6,12 +6,9 @@ import type { Breadcrumb } from '@/lib/api/types';
 interface Props {
   roomName: string;
   trail: Breadcrumb[];
-  /** Null navigates to the room root. */
+
   onNavigate: (folderId: string | null) => void;
-  /**
-   * A recipient browsing a shared folder starts there — anything above it is
-   * not theirs to see, so the room root is not offered as a destination.
-   */
+
   rootLabel?: string;
   rootNavigable?: boolean;
 }

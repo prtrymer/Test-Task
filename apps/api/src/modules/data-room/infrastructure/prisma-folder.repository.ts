@@ -25,7 +25,6 @@ export class PrismaFolderRepository extends FolderRepositoryPort {
   }
 
   async delete(dataRoomId: string, id: string): Promise<void> {
-    // Scoped by room so an id from another partition cannot be deleted.
     await this.prisma.folder.deleteMany({ where: { id, dataRoomId } });
   }
 
@@ -52,8 +51,6 @@ export class PrismaFolderRepository extends FolderRepositoryPort {
         },
       }),
 
-      // Descendants keep their position relative to the moved folder, so the
-      // rewrite is a prefix swap and the depth shifts by a constant.
       this.prisma.$executeRaw`
         UPDATE "folders"
         SET "path" = ${newPrefix} || substring("path" from ${oldPrefix.length + 1}),

@@ -27,10 +27,6 @@ export class FilesController {
     private readonly fileUrl: GetFileUrlHandler,
   ) {}
 
-  /**
-   * Step one of an upload. Returns a presigned URL the browser PUTs to
-   * directly — the bytes never pass through this API.
-   */
   @Post('upload-ticket')
   async ticket(
     @CurrentCaller() caller: Caller,
@@ -50,7 +46,6 @@ export class FilesController {
     };
   }
 
-  /** Step two: the upload landed, so the file becomes visible. */
   @Post()
   async commit(
     @CurrentCaller() caller: Caller,
@@ -66,7 +61,6 @@ export class FilesController {
     return { ...presentFile(file), versioned };
   }
 
-  /** Short-lived URL for viewing. See GetFileUrlHandler on why it is short. */
   @Get(':fileId/url')
   async url(
     @CurrentCaller() caller: Caller,

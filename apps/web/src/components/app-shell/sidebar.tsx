@@ -17,10 +17,6 @@ const NAV: NavItem[] = [
   { href: '/shared', label: 'Shared with me', icon: Users },
 ];
 
-/**
- * Drive's left rail: the primary create action sits above navigation rather
- * than in the content area, so it stays reachable at any depth of the tree.
- */
 export function Sidebar({ createSlot }: { createSlot?: ReactNode }) {
   const pathname = usePathname();
 
