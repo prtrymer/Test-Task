@@ -399,8 +399,7 @@ against the deployed environment, not only locally.
 
 ## Where AI was used
 
-I used Claude (via Claude Code) throughout, and it wrote the majority of the
-implementation code. The split was roughly:
+I used Claude (via Claude Code).The split was roughly:
 
 **Mine.** The architectural direction — hexagonal layering, the CQRS read/write
 split, the decision to keep the system shard-*ready* rather than sharded, and
