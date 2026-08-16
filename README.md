@@ -6,9 +6,14 @@ read-only — either with a named person or through an unguessable link.
 
 | | |
 | --- | --- |
-| **Frontend** | _paste the deployed frontend URL here_ |
+| **Frontend** | https://test-task-web-khaki.vercel.app |
 | **Backend** | https://test-task-api-tau.vercel.app |
 | **Repository** | https://github.com/prtrymer/Test-Task |
+
+The API reports its own configuration at
+[`/health`](https://test-task-api-tau.vercel.app/health) — database
+reachability, whether blob storage is configured, and which origins CORS
+allows.
 
 Stack: NestJS · Prisma · PostgreSQL · Vercel Blob · Next.js · TypeScript ·
 Tailwind · shadcn/ui, deployed as two Vercel projects.
